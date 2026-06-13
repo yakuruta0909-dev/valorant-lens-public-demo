@@ -319,35 +319,39 @@ export function HeatmapPage() {
               onChange={setSuccessMinKillCount}
             />
 
-            <button
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-valorant-red/60 bg-valorant-red px-4 text-sm font-black text-white transition hover:bg-valorant-red/80 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.04] disabled:text-white/35"
-              disabled={heatmap.visiblePoints.length === 0}
-              type="button"
-              onClick={() => downloadHeatmapCsv(heatmap.visiblePoints, heatmapMode)}
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              Export CSV
-            </button>
+            {!publicDemoMode && (
+              <>
+                <button
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-valorant-red/60 bg-valorant-red px-4 text-sm font-black text-white transition hover:bg-valorant-red/80 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.04] disabled:text-white/35"
+                  disabled={heatmap.visiblePoints.length === 0}
+                  type="button"
+                  onClick={() => downloadHeatmapCsv(heatmap.visiblePoints, heatmapMode)}
+                >
+                  <Download className="h-4 w-4" aria-hidden="true" />
+                  Export CSV
+                </button>
 
-            <button
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm font-black text-white transition hover:border-valorant-red/50 hover:bg-valorant-red/10 disabled:cursor-not-allowed disabled:text-white/35"
-              disabled={dangerZones.length === 0}
-              type="button"
-              onClick={() => downloadDangerZonesCsv(dangerZones)}
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              Export Risk Zones
-            </button>
+                <button
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm font-black text-white transition hover:border-valorant-red/50 hover:bg-valorant-red/10 disabled:cursor-not-allowed disabled:text-white/35"
+                  disabled={dangerZones.length === 0}
+                  type="button"
+                  onClick={() => downloadDangerZonesCsv(dangerZones)}
+                >
+                  <Download className="h-4 w-4" aria-hidden="true" />
+                  Export Risk Zones
+                </button>
 
-            <button
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm font-black text-white transition hover:border-emerald-400/50 hover:bg-emerald-400/10 disabled:cursor-not-allowed disabled:text-white/35"
-              disabled={successZones.length === 0}
-              type="button"
-              onClick={() => downloadSuccessZonesCsv(successZones)}
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              Export Strong Zones
-            </button>
+                <button
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm font-black text-white transition hover:border-emerald-400/50 hover:bg-emerald-400/10 disabled:cursor-not-allowed disabled:text-white/35"
+                  disabled={successZones.length === 0}
+                  type="button"
+                  onClick={() => downloadSuccessZonesCsv(successZones)}
+                >
+                  <Download className="h-4 w-4" aria-hidden="true" />
+                  Export Strong Zones
+                </button>
+              </>
+            )}
 
             {!publicDemoMode && (
               <button
@@ -361,42 +365,42 @@ export function HeatmapPage() {
               </button>
             )}
 
-            <button
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm font-black text-white transition hover:border-violet-300/50 hover:bg-violet-300/10 disabled:cursor-not-allowed disabled:text-white/35"
-              disabled={multiKillZones.length === 0}
-              type="button"
-              onClick={() => downloadMultiKillZonesCsv(multiKillZones)}
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              Export Multi Kill Zones
-            </button>
+            {!publicDemoMode && (
+              <button
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm font-black text-white transition hover:border-violet-300/50 hover:bg-violet-300/10 disabled:cursor-not-allowed disabled:text-white/35"
+                disabled={multiKillZones.length === 0}
+                type="button"
+                onClick={() => downloadMultiKillZonesCsv(multiKillZones)}
+              >
+                <Download className="h-4 w-4" aria-hidden="true" />
+                Export Multi Kill Zones
+              </button>
+            )}
           </div>
         </section>
 
-        <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
-          <h2 className="mb-4 text-base font-bold text-white">Point Plot Source</h2>
-          <div className="grid gap-3">
-            <InfoRow label="Timeline Events" value={String(timelineEvents.length)} />
-            <InfoRow label="Filtered Events" value={String(filteredTimelineEvents.length)} />
-            <InfoRow label="Drawable Points" value={String(points.length)} />
-            <InfoRow label="Visible Points" value={String(heatmap.visiblePoints.length)} />
-            <InfoRow label="Invalid Coordinates" value={String(invalidCoordinates)} />
-            <InfoRow label="Max Density" value={String(heatmap.visibleDensityGrid.maxDensity)} />
-            <InfoRow label="Active Cells" value={String(heatmap.visibleDensityGrid.activeCells)} />
-            <InfoRow label="Risk Zone Count" value={String(dangerZones.length)} />
-            <InfoRow label="Highest Risk Score" value={dangerSummary.highestDangerScore.toFixed(2)} />
-            <InfoRow label="Strong Zone Count" value={String(successZones.length)} />
-            <InfoRow label="Highest Strong Score" value={successSummary.highestSuccessScore.toFixed(2)} />
-            {!publicDemoMode && (
-              <>
-                <InfoRow label="Kill-Lean Cell Count" value={String(riskRewardSummary.rewardZoneCount)} />
-                <InfoRow label="Death-Lean Cell Count" value={String(riskRewardSummary.riskZoneCount)} />
-              </>
-            )}
-            <InfoRow label="Multi Kill Count" value={String(multiKillZones.length)} />
-            <InfoRow label="Highest Multi Kill Score" value={multiKillSummary.highestScore.toFixed(2)} />
-          </div>
-        </section>
+        {!publicDemoMode && (
+          <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
+            <h2 className="mb-4 text-base font-bold text-white">Point Plot Source</h2>
+            <div className="grid gap-3">
+              <InfoRow label="Timeline Events" value={String(timelineEvents.length)} />
+              <InfoRow label="Filtered Events" value={String(filteredTimelineEvents.length)} />
+              <InfoRow label="Drawable Points" value={String(points.length)} />
+              <InfoRow label="Visible Points" value={String(heatmap.visiblePoints.length)} />
+              <InfoRow label="Invalid Coordinates" value={String(invalidCoordinates)} />
+              <InfoRow label="Max Density" value={String(heatmap.visibleDensityGrid.maxDensity)} />
+              <InfoRow label="Active Cells" value={String(heatmap.visibleDensityGrid.activeCells)} />
+              <InfoRow label="Risk Zone Count" value={String(dangerZones.length)} />
+              <InfoRow label="Highest Risk Score" value={dangerSummary.highestDangerScore.toFixed(2)} />
+              <InfoRow label="Strong Zone Count" value={String(successZones.length)} />
+              <InfoRow label="Highest Strong Score" value={successSummary.highestSuccessScore.toFixed(2)} />
+              <InfoRow label="Kill-Lean Cell Count" value={String(riskRewardSummary.rewardZoneCount)} />
+              <InfoRow label="Death-Lean Cell Count" value={String(riskRewardSummary.riskZoneCount)} />
+              <InfoRow label="Multi Kill Count" value={String(multiKillZones.length)} />
+              <InfoRow label="Highest Multi Kill Score" value={multiKillSummary.highestScore.toFixed(2)} />
+            </div>
+          </section>
+        )}
 
       </aside>
 

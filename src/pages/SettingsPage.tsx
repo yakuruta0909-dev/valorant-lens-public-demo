@@ -913,7 +913,7 @@ export function SettingsPage() {
         />
       </SettingsSection>
 
-      <MapAssetSettingsSection onStatusChange={setStatus} />
+      {!publicDemoMode && <MapAssetSettingsSection onStatusChange={setStatus} />}
 
       <SettingsSection description="Reset or move local demo preferences between browsers." title="Local Demo Settings">
         <div className="mb-4 grid gap-3 md:grid-cols-2">
