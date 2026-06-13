@@ -611,10 +611,12 @@ export function SettingsPage() {
         )}
       </SettingsSection>
 
-      <SettingsSection
-        description="Mock match sync flow. Match list and details are local mock responses."
-        title="Mock Match Sync"
-      >
+      {!publicDemoMode && (
+        <>
+          <SettingsSection
+            description="Mock match sync flow. Match list and details are local mock responses."
+            title="Mock Match Sync"
+          >
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           <InfoCard
             icon={ShieldCheck}
@@ -730,12 +732,12 @@ export function SettingsPage() {
             {syncPreviewError}
           </div>
         )}
-      </SettingsSection>
+          </SettingsSection>
 
-      <SettingsSection
-        description="Review partial mock match detail failures."
-        title="Mock Match Sync Review"
-      >
+          <SettingsSection
+            description="Review partial mock match detail failures."
+            title="Mock Match Sync Review"
+          >
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
           <InfoCard icon={Database} label="Total Match IDs" value={String(matchSyncReviewState.review.totalMatchIds)} />
           <InfoCard icon={ShieldCheck} label="Success Count" value={String(matchSyncReviewState.review.successfulDetails)} />
@@ -785,7 +787,9 @@ export function SettingsPage() {
             </div>
           )}
         </div>
-      </SettingsSection>
+          </SettingsSection>
+        </>
+      )}
 
       <SettingsSection
         description={
