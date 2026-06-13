@@ -37,6 +37,7 @@ import { loadCalibrationPoints } from "../maps/calibrationPointStorage";
 import type { CalibrationPreviewPoint } from "../maps/calibrationPointTypes";
 import { VALORANT_MAPS } from "../maps/mapMetadata";
 import { isValorantMap } from "../maps/mapMetadata";
+import { getRiotApiClientStatus } from "../riot/client/riotApiClient";
 import { loadTimelineEvents } from "../timeline/timelineStorage";
 
 const eventTypeOptions = ["All", "kill", "death", "assist", "plant", "defuse"];
@@ -67,6 +68,7 @@ const heatmapModeOptions: Array<{ label: string; value: HeatmapMode }> = [
 const canvasSize = 1024;
 
 export function HeatmapPage() {
+  const publicDemoMode = useMemo(() => getRiotApiClientStatus().publicDemoMode, []);
   const currentData = useMemo(() => getCurrentDataSourceData(), []);
   const storedTimelineData = useMemo(() => loadTimelineEvents(), []);
   const timelineEvents =
@@ -160,8 +162,8 @@ export function HeatmapPage() {
   );
   const multiKillSummary = useMemo(() => summarizeMultiKillZones(multiKillZones), [multiKillZones]);
   const insights = useMemo(
-    () => buildHeatmapInsights({ dangerZones, riskRewardZones, successZones }),
-    [dangerZones, riskRewardZones, successZones],
+    () => buildHeatmapInsights({ dangerZones, riskRewardZones: publicDemoMode ? [] : riskRewardZones, successZones }),
+    [dangerZones, publicDemoMode, riskRewardZones, successZones],
   );
   const selectedMapAsset = useMemo(
     () => (filters.map === "All" ? undefined : getMapAsset(filters.map)),
@@ -282,13 +284,19 @@ export function HeatmapPage() {
               <h3 className="mb-3 text-xs font-black uppercase tracking-[0.16em] text-white/40">Layer Controls</h3>
               <div className="grid gap-2">
                 <ToggleField checked={showBackgroundLayer} label="Background" onChange={setShowBackgroundLayer} />
-                <ToggleField checked={showCalibrationPoints} label="Calibration Points" onChange={setShowCalibrationPoints} />
-                <ToggleField checked={showCalibrationLabels} label="Calibration Labels" onChange={setShowCalibrationLabels} />
+                {!publicDemoMode && (
+                  <>
+                    <ToggleField checked={showCalibrationPoints} label="Calibration Points" onChange={setShowCalibrationPoints} />
+                    <ToggleField checked={showCalibrationLabels} label="Calibration Labels" onChange={setShowCalibrationLabels} />
+                  </>
+                )}
                 <ToggleField checked={showDensityLayer} label="Density" onChange={setShowDensityLayer} />
                 <ToggleField checked={showPointLayer} label="Points" onChange={setShowPointLayer} />
                 <ToggleField checked={showDangerZones} label="Risk Zones" onChange={setShowDangerZones} />
                 <ToggleField checked={showSuccessZones} label="Strong Zones" onChange={setShowSuccessZones} />
-                <ToggleField checked={showRiskRewardZones} label="Kill/Death Balance" onChange={setShowRiskRewardZones} />
+                {!publicDemoMode && (
+                  <ToggleField checked={showRiskRewardZones} label="Kill/Death Balance" onChange={setShowRiskRewardZones} />
+                )}
                 <ToggleField checked={showMultiKillZones} label="Multi Kill Zones" onChange={setShowMultiKillZones} />
               </div>
             </div>
@@ -341,15 +349,17 @@ export function HeatmapPage() {
               Export Strong Zones
             </button>
 
-            <button
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm font-black text-white transition hover:border-sky-300/50 hover:bg-sky-300/10 disabled:cursor-not-allowed disabled:text-white/35"
-              disabled={riskRewardZones.length === 0}
-              type="button"
-              onClick={() => downloadRiskRewardCsv(riskRewardZones)}
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              Export Kill/Death Balance
-            </button>
+            {!publicDemoMode && (
+              <button
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm font-black text-white transition hover:border-sky-300/50 hover:bg-sky-300/10 disabled:cursor-not-allowed disabled:text-white/35"
+                disabled={riskRewardZones.length === 0}
+                type="button"
+                onClick={() => downloadRiskRewardCsv(riskRewardZones)}
+              >
+                <Download className="h-4 w-4" aria-hidden="true" />
+                Export Kill/Death Balance
+              </button>
+            )}
 
             <button
               className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm font-black text-white transition hover:border-violet-300/50 hover:bg-violet-300/10 disabled:cursor-not-allowed disabled:text-white/35"
@@ -377,8 +387,12 @@ export function HeatmapPage() {
             <InfoRow label="Highest Risk Score" value={dangerSummary.highestDangerScore.toFixed(2)} />
             <InfoRow label="Strong Zone Count" value={String(successZones.length)} />
             <InfoRow label="Highest Strong Score" value={successSummary.highestSuccessScore.toFixed(2)} />
-            <InfoRow label="Kill-Lean Cell Count" value={String(riskRewardSummary.rewardZoneCount)} />
-            <InfoRow label="Death-Lean Cell Count" value={String(riskRewardSummary.riskZoneCount)} />
+            {!publicDemoMode && (
+              <>
+                <InfoRow label="Kill-Lean Cell Count" value={String(riskRewardSummary.rewardZoneCount)} />
+                <InfoRow label="Death-Lean Cell Count" value={String(riskRewardSummary.riskZoneCount)} />
+              </>
+            )}
             <InfoRow label="Multi Kill Count" value={String(multiKillZones.length)} />
             <InfoRow label="Highest Multi Kill Score" value={multiKillSummary.highestScore.toFixed(2)} />
           </div>
@@ -417,13 +431,15 @@ export function HeatmapPage() {
           <StatCard label="Average Strong Score" value={successSummary.averageSuccessScore.toFixed(2)} />
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-5">
-          <StatCard label="Kill-Lean Cells" value={String(riskRewardSummary.rewardZoneCount)} />
-          <StatCard label="Death-Lean Cells" value={String(riskRewardSummary.riskZoneCount)} />
-          <StatCard label="Average Score" value={riskRewardSummary.averageScore.toFixed(2)} />
-          <StatCard label="Highest Balance Cell" value={formatRiskRewardZone(riskRewardSummary.bestZone)} />
-          <StatCard label="Lowest Balance Cell" value={formatRiskRewardZone(riskRewardSummary.worstZone)} />
-        </div>
+        {!publicDemoMode && (
+          <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-5">
+            <StatCard label="Kill-Lean Cells" value={String(riskRewardSummary.rewardZoneCount)} />
+            <StatCard label="Death-Lean Cells" value={String(riskRewardSummary.riskZoneCount)} />
+            <StatCard label="Average Score" value={riskRewardSummary.averageScore.toFixed(2)} />
+            <StatCard label="Highest Balance Cell" value={formatRiskRewardZone(riskRewardSummary.bestZone)} />
+            <StatCard label="Lowest Balance Cell" value={formatRiskRewardZone(riskRewardSummary.worstZone)} />
+          </div>
+        )}
 
         <div className="grid gap-4 md:grid-cols-3">
           <StatCard label="Multi Kill Zones" value={String(multiKillSummary.multiKillZoneCount)} />
@@ -470,13 +486,13 @@ export function HeatmapPage() {
             opacity={opacity}
             selectedMapAsset={selectedMapAsset}
             showBackgroundLayer={showBackgroundLayer}
-            showCalibrationLabels={showCalibrationLabels}
-            showCalibrationPoints={showCalibrationPoints}
+            showCalibrationLabels={!publicDemoMode && showCalibrationLabels}
+            showCalibrationPoints={!publicDemoMode && showCalibrationPoints}
             showDangerZones={showDangerZones}
             showDensityLayer={showDensityLayer}
             showMultiKillZones={showMultiKillZones}
             showPointLayer={showPointLayer}
-            showRiskRewardZones={showRiskRewardZones}
+            showRiskRewardZones={!publicDemoMode && showRiskRewardZones}
             showSuccessZones={showSuccessZones}
             riskRewardZones={riskRewardZones}
             successZones={successZones}
@@ -505,16 +521,18 @@ export function HeatmapPage() {
           <SuccessZoneTable successZones={successZones.slice(0, 10)} />
         </section>
 
-        <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-black text-white">Kill/Death Balance Cells</h2>
-              <p className="mt-1 text-sm font-semibold text-white/50">Cells classified by kill count versus death count</p>
+        {!publicDemoMode && (
+          <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-black text-white">Kill/Death Balance Cells</h2>
+                <p className="mt-1 text-sm font-semibold text-white/50">Cells classified by kill count versus death count</p>
+              </div>
+              <p className="text-sm font-black text-sky-300">{riskRewardZones.length} zones</p>
             </div>
-            <p className="text-sm font-black text-sky-300">{riskRewardZones.length} zones</p>
-          </div>
-          <RiskRewardZoneTable zones={riskRewardZones} />
-        </section>
+            <RiskRewardZoneTable zones={riskRewardZones} />
+          </section>
+        )}
 
         <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
           <div className="mb-4 flex items-center justify-between gap-3">

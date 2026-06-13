@@ -182,40 +182,42 @@ export function DataManagementPage() {
         </div>
       </section>
 
-      <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
-        <div className="mb-4">
-          <h2 className="text-lg font-black text-white">Riot Sync State</h2>
-          <p className="mt-1 text-sm font-semibold text-white/50">Mock sync status stored in local demo storage</p>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-white/40">Last Riot Sync</p>
-            <p className="mt-2 text-lg font-black text-white">{formatSyncDate(riotSyncState.lastSync)}</p>
+      {!publicDemoMode && (
+        <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
+          <div className="mb-4">
+            <h2 className="text-lg font-black text-white">Riot Sync State</h2>
+            <p className="mt-1 text-sm font-semibold text-white/50">Mock sync status stored in local demo storage</p>
           </div>
-          <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-white/40">Sync Status</p>
-            <p
-              className={`mt-2 text-lg font-black ${
-                riotSyncState.status === "failed" ? "text-valorant-red" : "text-white"
-              }`}
-            >
-              {formatSyncStatus(riotSyncState.status)}
-            </p>
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-white/40">Last Riot Sync</p>
+              <p className="mt-2 text-lg font-black text-white">{formatSyncDate(riotSyncState.lastSync)}</p>
+            </div>
+            <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-white/40">Sync Status</p>
+              <p
+                className={`mt-2 text-lg font-black ${
+                  riotSyncState.status === "failed" ? "text-valorant-red" : "text-white"
+                }`}
+              >
+                {formatSyncStatus(riotSyncState.status)}
+              </p>
+            </div>
+            <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-white/40">Synced Matches</p>
+              <p className="mt-2 text-lg font-black text-white">{riotSyncState.summary.matches}</p>
+            </div>
+            <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-white/40">Verification</p>
+              <p className="mt-2 text-lg font-black text-white">
+                {riotSyncState.summary.verificationPassed ? "Passed" : "Failed"}
+              </p>
+            </div>
           </div>
-          <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-white/40">Synced Matches</p>
-            <p className="mt-2 text-lg font-black text-white">{riotSyncState.summary.matches}</p>
-          </div>
-          <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-white/40">Verification</p>
-            <p className="mt-2 text-lg font-black text-white">
-              {riotSyncState.summary.verificationPassed ? "Passed" : "Failed"}
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
+      {!publicDemoMode && <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
         <div className="mb-4">
           <h2 className="text-lg font-black text-white">Match Sync Summary</h2>
           <p className="mt-1 text-sm font-semibold text-white/50">
@@ -245,9 +247,9 @@ export function DataManagementPage() {
           </div>
         </div>
 
-      </section>
+      </section>}
 
-      <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
+      {!publicDemoMode && <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
         <div className="mb-4">
           <h2 className="text-lg font-black text-white">Incremental Sync Summary</h2>
           <p className="mt-1 text-sm font-semibold text-white/50">
@@ -276,9 +278,9 @@ export function DataManagementPage() {
             <p className="mt-2 text-lg font-black text-white">{incrementalSyncState.lastTotalMatchIds}</p>
           </div>
         </div>
-      </section>
+      </section>}
 
-      <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
+      {!publicDemoMode && <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
         <div className="mb-4">
           <h2 className="text-lg font-black text-white">Match Cache Summary</h2>
           <p className="mt-1 text-sm font-semibold text-white/50">
@@ -295,9 +297,9 @@ export function DataManagementPage() {
             <p className="mt-2 text-lg font-black text-white">{formatSyncDate(matchCacheSummary.lastCachedAt)}</p>
           </div>
         </div>
-      </section>
+      </section>}
 
-      <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
+      {!publicDemoMode && <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
         <div className="mb-4">
           <h2 className="text-lg font-black text-white">Sync Preview Summary</h2>
           <p className="mt-1 text-sm font-semibold text-white/50">
@@ -330,9 +332,9 @@ export function DataManagementPage() {
             <p className="mt-2 text-lg font-black capitalize text-white">{syncPreview.resolutionMode}</p>
           </div>
         </div>
-      </section>
+      </section>}
 
-      <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
+      {!publicDemoMode && <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
         <div className="mb-4">
           <h2 className="text-lg font-black text-white">Conflict Summary</h2>
           <p className="mt-1 text-sm font-semibold text-white/50">
@@ -381,9 +383,9 @@ export function DataManagementPage() {
             </div>
           )}
         </div>
-      </section>
+      </section>}
 
-      <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
+      {!publicDemoMode && <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
         <div className="mb-4">
           <h2 className="text-lg font-black text-white">Match Sync Review</h2>
           <p className="mt-1 text-sm font-semibold text-white/50">Partial failure review for match detail sync</p>
@@ -437,7 +439,7 @@ export function DataManagementPage() {
             </div>
           )}
         </div>
-      </section>
+      </section>}
 
       <section className="rounded-lg border border-white/10 bg-valorant-panel p-5 shadow-2xl shadow-black/20">
         <div className="mb-4">

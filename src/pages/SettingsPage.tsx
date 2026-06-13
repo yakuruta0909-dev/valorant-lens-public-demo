@@ -155,6 +155,10 @@ export function SettingsPage() {
     [],
   );
   const publicDemoMode = riotApiStatus.publicDemoMode;
+  const visibleDataSourceOptions = useMemo(
+    () => (publicDemoMode ? dataSourceOptions.filter((option) => option.value !== "riot") : dataSourceOptions),
+    [publicDemoMode],
+  );
 
   useEffect(() => {
     if (!status) return;
@@ -387,8 +391,8 @@ export function SettingsPage() {
             <h3 className="mb-3 text-xs font-black uppercase tracking-[0.16em] text-white/40">
               Current Data Source
             </h3>
-            <div className="grid gap-2 sm:grid-cols-3">
-              {dataSourceOptions.map((option) => (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {visibleDataSourceOptions.map((option) => (
                 <label
                   key={option.value}
                   className={`flex min-h-11 cursor-pointer items-center gap-3 rounded-md border px-3 text-sm font-bold transition ${
@@ -408,7 +412,12 @@ export function SettingsPage() {
                 </label>
               ))}
             </div>
-            {settings.dataSource === "riot" && (
+            {publicDemoMode && (
+              <p className="mt-3 rounded-md border border-white/10 bg-white/[0.04] p-3 text-sm font-bold text-white/60">
+                Public demo data sources are limited to mock/local placeholder data.
+              </p>
+            )}
+            {!publicDemoMode && settings.dataSource === "riot" && (
               <p className="mt-3 rounded-md border border-valorant-red/30 bg-valorant-red/10 p-3 text-sm font-bold text-valorant-red">
                 Riot Data is using mock sync data. No API communication is performed.
               </p>
