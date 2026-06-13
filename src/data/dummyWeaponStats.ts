@@ -1,0 +1,72 @@
+import type { WeaponStat } from "../types";
+
+export const WEAPONS = ["Vandal", "Phantom", "Sheriff", "Guardian", "Operator", "Marshal"] as const;
+
+type WeaponRow = readonly [
+  matchId: string,
+  weapon: (typeof WEAPONS)[number],
+  kills: number,
+  headshots: number,
+  bodyshots: number,
+  legshots: number,
+];
+
+const weaponRows: WeaponRow[] = [
+  ["comp-1", "Vandal", 15, 6, 8, 1],
+  ["comp-1", "Sheriff", 4, 2, 2, 0],
+  ["comp-2", "Phantom", 10, 3, 6, 1],
+  ["comp-2", "Guardian", 3, 2, 1, 0],
+  ["comp-3", "Phantom", 13, 4, 8, 1],
+  ["comp-3", "Marshal", 2, 1, 1, 0],
+  ["comp-4", "Guardian", 8, 4, 4, 0],
+  ["comp-4", "Vandal", 6, 2, 4, 0],
+  ["comp-5", "Vandal", 18, 8, 9, 1],
+  ["comp-5", "Sheriff", 3, 2, 1, 0],
+  ["comp-6", "Phantom", 8, 2, 5, 1],
+  ["comp-6", "Operator", 2, 1, 1, 0],
+  ["comp-7", "Vandal", 19, 9, 9, 1],
+  ["comp-7", "Sheriff", 4, 3, 1, 0],
+  ["comp-8", "Phantom", 13, 5, 7, 1],
+  ["comp-8", "Guardian", 4, 3, 1, 0],
+  ["comp-9", "Phantom", 11, 3, 7, 1],
+  ["comp-9", "Marshal", 3, 2, 1, 0],
+  ["comp-10", "Vandal", 14, 6, 7, 1],
+  ["comp-10", "Guardian", 5, 3, 2, 0],
+  ["comp-11", "Vandal", 14, 5, 8, 1],
+  ["comp-11", "Operator", 3, 1, 2, 0],
+  ["comp-12", "Phantom", 12, 4, 7, 1],
+  ["comp-12", "Sheriff", 3, 2, 1, 0],
+  ["comp-13", "Vandal", 21, 10, 10, 1],
+  ["comp-13", "Sheriff", 5, 4, 1, 0],
+  ["comp-14", "Phantom", 12, 4, 7, 1],
+  ["comp-14", "Guardian", 3, 2, 1, 0],
+  ["comp-15", "Phantom", 14, 5, 8, 1],
+  ["comp-15", "Marshal", 4, 3, 1, 0],
+  ["comp-16", "Guardian", 9, 5, 4, 0],
+  ["comp-16", "Vandal", 6, 2, 4, 0],
+  ["comp-17", "Vandal", 20, 9, 10, 1],
+  ["comp-17", "Sheriff", 4, 3, 1, 0],
+  ["comp-18", "Phantom", 9, 3, 5, 1],
+  ["comp-18", "Operator", 2, 1, 1, 0],
+  ["comp-19", "Vandal", 23, 11, 11, 1],
+  ["comp-19", "Sheriff", 4, 3, 1, 0],
+  ["comp-20", "Phantom", 15, 6, 8, 1],
+  ["comp-20", "Guardian", 5, 4, 1, 0],
+  ["comp-21", "Phantom", 16, 7, 8, 1],
+  ["comp-21", "Marshal", 4, 3, 1, 0],
+  ["comp-22", "Guardian", 9, 4, 5, 0],
+  ["comp-22", "Vandal", 6, 2, 4, 0],
+  ["comp-23", "Vandal", 22, 10, 11, 1],
+  ["comp-23", "Sheriff", 5, 4, 1, 0],
+];
+
+export const weaponStats: WeaponStat[] = weaponRows.map(
+  ([matchId, weapon, kills, headshots, bodyshots, legshots]) => ({
+    matchId,
+    weapon,
+    kills,
+    headshots,
+    bodyshots,
+    legshots,
+  }),
+);
